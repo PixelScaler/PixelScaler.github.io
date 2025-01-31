@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="icon" type="image/png" href="iconoweb.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelScaler - Redimensionar imagenes</title>
+    
+    <!-- SEO -->
+    <meta name="description" content="PixelScaler es la mejor herramienta online para redimensionar imagenes para que no se vean borrosas.">
+    <meta name="keywords" content="pixel art, redimensionar imágenes, descargar imágenes, pixel perfect, herramienta online">
+    <meta name="author" content="Tu Nombre o Marca">
+    <meta property="og:title" content="PixelScaler - Redimensionar imagenes>
+    <meta property="og:description" content="Sube, redimensiona imganes para que no se vean borrosas">
+    <meta property="og:image" content="https://tusitio.com/imagen-previa.png">
+    <meta property="og:url" content="https://tusitio.com">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- Estilos -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #0A192F;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra horizontalmente */
+            justify-content: center; /* Centra verticalmente */
+            min-height: 100vh; /* Ocupar toda la pantalla */
+        }
+        h1 {
+            margin-top: 20px;
+            font-size: 28px;
+            color: #64FFDA;
+        }
+        .container {
+            background: #112240;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.2);
+        }
+        input[type="file"], input[type="range"], button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+        input[type="file"] {
+            background: #233554;
+            color: white;
+            cursor: pointer;
+        }
+        input[type="range"] {
+            appearance: none;
+            background: #64FFDA;
+            height: 5px;
+            cursor: pointer;
+        }
+        button {
+            background: #64FFDA;
+            color: #112240;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #52E0C4;
+        }
+        img {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            display: none;
+            margin: 20px auto;
+            max-width: 100%;
+            border-radius: 5px;
+            border: 2px solid #64FFDA;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>PixelScaler - Redimensiona imagenes</h1>
+    
+    <section class="container">
+        <label for="imageInput">Sube tu imagen</label>
+        <input type="file" id="imageInput" accept="image/*">
+        
+        <label for="sizeSlider">Tamaño:</label>
+        <input type="range" id="sizeSlider" min="64" max="512" value="128">
+        <p><span id="sizeValue">128</span> px</p>
+        
+        <img id="image" src="" alt="Vista previa de la imagen">
+        
+        <button id="downloadBtn">Descargar Imagen</button>
+    </section>
+
+    <canvas id="canvas"></canvas>
+
+    <footer>
+        <p>© 2025 PixelScaler - Herramienta gratuita para pixel art</p>
+    </footer>
+
+    <script>
+        const imageInput = document.getElementById("imageInput");
+        const image = document.getElementById("image");
+        const sizeSlider = document.getElementById("sizeSlider");
+        const sizeValue = document.getElementById("sizeValue");
+        const downloadBtn = document.getElementById("downloadBtn");
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        imageInput.addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    image.src = e.target.result;
+                    image.style.display = "block";  
+                    downloadBtn.style.display = "block"; 
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        sizeSlider.addEventListener("input", function() {
+            const newSize = sizeSlider.value;
+            sizeValue.textContent = newSize;
+            image.style.width = newSize + "px";
+            image.style.height = newSize + "px"; 
+        });
+
+        downloadBtn.addEventListener("click", function() {
+            const newSize = sizeSlider.value;
+            canvas.width = newSize;
+            canvas.height = newSize;
+
+            ctx.imageSmoothingEnabled = false; 
+            ctx.drawImage(image, 0, 0, newSize, newSize);
+
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = "pixel_art.png";
+            link.click();
+        });
+    </script>
+
+</body>
+</html>
